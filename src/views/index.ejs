@@ -52,12 +52,13 @@
         <form class="needs-validation" novalidate  name="singInForm" action="/auth/signIn" method="post">
           <div class="form-group">
             <label for="sing-in-username">Name</label>
-            <input type="text" class="form-control" name="username" id="sing-in-username" aria-describedby="sing-in-name" placeholder="Your name..." required>
+            <input type="text" class="form-control" name="username" id="sing-in-username" aria-describedby="sing-in-name" placeholder="Your name..."
+            pattern="^[A-Za-z0-9]{2,15}$" required>
             <div class="valid-feedback">
                 Looks good!
             </div>
             <div class="invalid-feedback">
-                ...
+                Alphanumeric 2-15 characters. No special characters and whitespace allowed!
             </div>
           </div>
           <div class="form-group">
@@ -78,13 +79,14 @@
         <form class="needs-validation" novalidate name="singInForm" action="/auth/signUp" method="post">
           <div class="form-group">
             <label for="sing-up-username">Name</label>
-            <input type="text" class="form-control" name="sing-up-username" id="sing-up-username" aria-describedby="sing-up-name" placeholder="Your name..." required>
+            <input type="text" class="form-control" name="sing-up-username" id="sing-up-username" aria-describedby="sing-up-name" placeholder="Your name..."
+            pattern="^[A-Za-z0-9]{2,15}$" required>
             <small id="sing-up-name" class="form-text text-muted">We'll never share your name with anyone else.</small>
             <div class="valid-feedback">
                 Looks good!
             </div>
             <div class="invalid-feedback">
-                ...
+                Alphanumeric 2-15 characters. No special characters and whitespace allowed!
             </div>
           </div>
           <div class="form-group">
