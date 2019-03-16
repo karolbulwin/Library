@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title><%=title%></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#333" />
+  <meta name="description" content="Mini library">
+  <meta name="keywords" content="library, books">
+  <meta name="author" content="Karol Bulwin">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <!-- Bootstrap CSS -->
+  <link href="../../css/bootstrap.min.css" rel="stylesheet">
+  <!-- CSS-->
+  <link href="../../css/styles.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="d-flex justify-content-between flex-column min-vh-100">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Library</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <%for(let i=0; i<nav.length; i++) {%>
+            <li class="nav-item">
+              <a class="nav-link" href="<%=nav[i].link%>"><%=nav[i].title%></a>
+            </li>
+            <%}%>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+    </header>
+  
+    <main>
+      <div class="container-fluid py-5 col-sm-8 col-md-7 col-lg-6 col-xl-5">
+        <form class="needs-validation" novalidate name="singUpForm" action="/auth/signUp" method="post">
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="firstName">First name</label>
+              <input type="text" class="form-control" name="firstName" id="firstName" placeholder="First name" 
+              pattern="^[A-Za-z]{2,15}$" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Only letters 2-15 characters. No special characters and whitespace allowed!
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="lastName">Last name</label>
+              <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Last name" 
+              pattern="^[A-Za-z]{2,15}$" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Only letters 2-15 characters. No special characters and whitespace allowed!
+              </div>
+            </div>
+          </div>   
+
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" name="username" id="username" placeholder="Username" 
+            pattern="^[A-Za-z0-9_]{2,21}$" required>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+            <div class="invalid-feedback">
+            Alphanumeric 2-21 characters. Whitespace not allowed! Available special characters _ 
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="username">Password</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password" 
+            pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+            <div class="invalid-feedback">
+              It must contain at least one numeric, one uppercase and lowercase letter. Available special characters. At least 8 or more characters!
+            </div>
+          </div>
+            
+          <div class="form-row">
+            <div class="col-md-8 mb-3">
+              <label for="city">City</label>
+              <input type="text" class="form-control" name="address" id="city" placeholder="London"
+              pattern="^[A-Za-z0-9 ]{1,19}$" required>
+              <div class="invalid-feedback">
+                Please provide a valid city.
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="postalCode">Postal Code</label>
+              <input type="text" class="form-control" name="address" id="postalCode" placeholder="WC2N 5DU"
+              pattern="[A-Za-z]{1,2}[0-9Rr][0-9A-Za-z]? [0-9][ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}" required>
+              <div class="invalid-feedback">
+                Please provide a valid Postal Code for UK.
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-outline-success">Sign Up</button>
+        </form>
+      </div>
+    </main>
+
+    <footer class="d-flex justify-content-center bg-light py-2">
+      <p class="my-0 small">Created by: Karol Bulwin</p>
+    </footer>
+  </div>
+  <!-- script references -->
+  <script src="../../js/jquery.min.js"></script>
+  <script src="../../js/bootstrap.min.js"></script>
+  <script src="../../js/custom-validation.js"></script>
+</body>
+
+</html>
