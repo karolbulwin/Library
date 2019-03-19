@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title><%=title%></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#333" />
+  <meta name="description" content="<%=book.title%>, <%=book.author%>, genre: <%=book.genre%>">
+  <meta name="keywords" content="library, books, book, <%=book.title%>, <%=book.author%>, <%=book.genre%>">
+  <meta name="author" content="Karol Bulwin">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <!-- Bootstrap CSS -->
+  <link href="../../css/bootstrap.min.css" rel="stylesheet">
+  <!-- CSS-->
+  <link href="../../css/styles.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="d-flex justify-content-between flex-column min-vh-100">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Library</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <%for(let i=0; i<nav.length; i++) {%>
+            <li class="nav-item">
+              <a class="nav-link" href="<%=nav[i].link%>"><%=nav[i].title%></a>
+            </li>
+            <%}%>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+    </header>
+  
+    <main>
+      <div class="container-fluid py-3 content">
+        <div class="row">
+          <div class="col-12 pb-3">
+            <img src="<%=book.details.image_url%>" class="rounded float-left d-none d-md-block pb-2 pr-2" alt="Picture of a book">
+            <h1><%=book.title%></h1>
+            <h3 class="pb-2">by <%=book.author%></h3>
+          </div>
+
+          <div class="col-12 pb-5">
+            <p class="multiple-columns">
+              <img src="<%=book.details.image_url%>" class="rounded float-left d-md-none pr-2"
+                alt="Picture of a book">
+              <%-book.details.description%></p>
+            <a href="<%=book.details.link%>" class="btn btn-outline-success float-right">Read more on Goodreads <i class="fab fa-goodreads    "></i></a>
+          </div>
+          <div class="col-12 container-fluid pb-4">
+            <form name="reserveForm" action="/books/reserveBook" method="post">
+              <div class="hidden">
+                <label for="bookId"></label>
+                <input type="text" class="form-control" name="bookId" id="bookId" placeholder="book id" value="<%=book._id%>" required>    
+                <label for="title"></label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="book title" value="<%=book.title%>" required>  
+                <label for="isReserved"></label>
+                <input type="text" class="form-control" name="isReserved" id="isReserved" placeholder="reserve a book" value="<%=book.isReserved%>" required>
+              </div>
+              <p>You <span id="avaliable-for-user">can</span> reserve that book!</p>
+              <p id="info-for-user"></p>
+              <button id="btn-reserve" type="submit" class="btn btn-outline-success">Reserve</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="d-flex justify-content-center bg-light py-2">
+      <p class="my-0 small">Created by: Karol Bulwin</p>
+    </footer>
+  </div>
+  <!-- script references -->
+  <script src="../../js/jquery.min.js"></script>
+  <script src="../../js/bootstrap.min.js"></script>
+  <script src="../../js/custom-validation.js"></script>
+  <script>
+
+  if (document.querySelector("#isReserved").value === "true"
+    || <%=user.hasRented%> === true || <%=user.hasReserved%> === true) {
+    document.querySelector("#btn-reserve").disabled = true;
+    document.querySelector('#avaliable-for-user').innerText = 'can\'t';
+  }
+
+  if ( <%=user.hasRented%> === true || <%=user.hasReserved%> === true) {
+    document.querySelector('#info-for-user').innerText = 'You already rented or reserved one!';
+  }
+  
+  </script>
+</body>
+
+</html>
