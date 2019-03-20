@@ -46,21 +46,21 @@
   
     <main>
       <div class="container-fluid py-3 content">
-        <div class="row">
-          <div class="col-12 pb-3">
+        <div class="row justify-content-center">
+          <div class="col-12 pb-3 col-md-10">
             <img src="<%=book.details.image_url%>" class="rounded float-left d-none d-md-block pb-2 pr-2" alt="Picture of a book">
             <h1><%=book.title%></h1>
             <h3 class="pb-2">by <%=book.author%></h3>
           </div>
 
-          <div class="col-12 pb-5">
+          <div class="col-12 pb-5 col-md-10">
             <p class="multiple-columns">
               <img src="<%=book.details.image_url%>" class="rounded float-left d-md-none pr-2"
                 alt="Picture of a book">
               <%-book.details.description%></p>
             <a href="<%=book.details.link%>" class="btn btn-outline-success float-right">Read more on Goodreads <i class="fab fa-goodreads    "></i></a>
           </div>
-          <div class="col-12 container-fluid pb-4">
+          <div class="col-12 container-fluid pb-4 col-md-10">
             <form name="reserveForm" action="/books/reserveBook" method="post">
               <div class="hidden">
                 <label for="bookId"></label>
