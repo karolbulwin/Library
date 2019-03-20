@@ -51,17 +51,11 @@
             <label for="username">Username</label>
             <input type="text" class="form-control" name="username" id="username" placeholder="Your name..."
             pattern="^[A-Za-z0-9_]{2,21}$" required>
-            <div class="invalid-feedback">
-              Invalid username!
-            </div>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
             <input type="password" class="form-control" name="password" id="password" placeholder="Password"
             pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required>
-            <div class="invalid-feedback">
-              Invalid password!
-            </div>
           </div>
           <div class="d-flex justify-content-between align-items-baseline">
             <button type="submit" class="btn btn-outline-success">Sign In</button>
