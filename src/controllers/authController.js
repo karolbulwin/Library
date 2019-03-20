@@ -45,6 +45,7 @@ function authController(nav) {
       } catch (err) {
         debug(err);
       }
+      client.close();
     }());
   }
   function logout(req, res) {
