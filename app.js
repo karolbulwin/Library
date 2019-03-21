@@ -59,13 +59,23 @@ app.use('/admin', adminRouter);
 app.use('/auth', authRouter);
 
 app.get('/', (req, res) => {
-  res.render(
-    'index',
-    {
-      nav,
-      title: 'Library'
-    }
-  );
+  if (req.user) {
+    res.render(
+      'indexLogout',
+      {
+        nav,
+        title: 'Library'
+      }
+    );
+  } else {
+    res.render(
+      'index',
+      {
+        nav,
+        title: 'Library'
+      }
+    );
+  }
 });
 
 app.listen(port, () => {
