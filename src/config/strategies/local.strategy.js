@@ -24,7 +24,6 @@ function localStrategy() {
 
           const user = await col.findOne({ username });
 
-          debug(user);
           if (user) {
             if (user.password === password) {
               done(null, user);
