@@ -37,11 +37,17 @@ function authController(nav) {
           hasReserved: false
         };
 
-        const results = await col.insertOne(user);
+        const checkName = await col.findOne({ username: user.username });
 
-        req.logIn(results.ops[0], () => {
-          res.redirect('/books');
-        });
+        if (checkName) {
+          res.status(500).send('Change your username! It is occupied!').end(); // TODO
+        } else {
+          const results = await col.insertOne(user);
+
+          req.logIn(results.ops[0], () => {
+            res.redirect('/books');
+          });
+        }
       } catch (err) {
         debug(err);
       }
