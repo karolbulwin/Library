@@ -53,10 +53,12 @@ const nav = [
 const bookRouter = require('./src/routes/bookRoutes')(nav);
 const adminRouter = require('./src/routes/adminRoutes')(nav);
 const authRouter = require('./src/routes/authRoutes')(nav);
+const searchRouter = require('./src/routes/searchRoutes')(nav);
 
 app.use('/books', bookRouter);
 app.use('/admin', adminRouter);
 app.use('/auth', authRouter);
+app.use('/search', searchRouter);
 
 app.get('/', (req, res) => {
   if (req.user) {
