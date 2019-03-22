@@ -53,7 +53,7 @@
           <% if (book.length !== 0) { %>
             <% book.forEach((b) => { %>
               <div class="info-for-user col-12 d-flex justify-content-center flex-wrap align-items-baseline pb-3">
-                <h3><%=b.title%></h3>
+                <h3 class="text-center"><%=b.title%></h3>
                 <h4 class="px-3">by <%=b.author%></h4>
                 <a href="/books/<%=b._id%>" class="btn btn-sm btn-outline-success">Read More</a>
               </div>
