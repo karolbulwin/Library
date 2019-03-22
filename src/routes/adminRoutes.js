@@ -1,7 +1,8 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 const debug = require('debug')('app:adminRoutes');
 const chalk = require('chalk');
+const Book = require('../models/bookSchema');
 
 const books = [
   {
@@ -77,27 +78,35 @@ const books = [
     reservedBy: null
   }];
 
+const newBooks = [];
+
+/* use schema for check input */
+books.forEach((book) => {
+  const newBook = new Book(book);
+  newBooks.push(newBook);
+});
+
 const adminRouter = express.Router();
 
 function router() {
   adminRouter.route('/')
     .get((req, res) => {
-      const url = 'mongodb://localhost:27017';
-      const dbName = 'libraryApp';
+      const url = 'mongodb://localhost:27017/libraryApp';
       (async function mongo() {
-        let client;
         try {
-          client = await MongoClient.connect(url);
+          await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
           debug(`${chalk.green('Connected correctly to server - add books')}`);
 
-          const db = client.db(dbName);
-
-          const response = await db.collection('books').insertMany(books);
-          res.json(response);
+          Book.collection.insertMany(newBooks, (err) => {
+            if (err) {
+              debug(err);
+            }
+            res.json(newBooks);
+          });
         } catch (err) {
           debug(err.stack);
         }
-        client.close();
+        mongoose.disconnect();
       }());
     });
   return adminRouter;
