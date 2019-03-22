@@ -1,5 +1,6 @@
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 const debug = require('debug')('app:searchController');
+const Book = require('../models/bookSchema');
 
 function searchController(nav) {
   function middleware(req, res, next) {
@@ -10,47 +11,36 @@ function searchController(nav) {
     }
   }
   function getSearch(req, res) {
-    const url = 'mongodb://localhost:27017';
-    const dbName = 'libraryApp';
+    const url = 'mongodb://localhost:27017/libraryApp';
 
     const {
       userSearch
     } = req.body;
 
     (async function mongo() {
-      let client;
       try {
-        client = await MongoClient.connect(url, { useNewUrlParser: true });
+        await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
+
         debug('Connected correctly to server - search');
 
-        const search = {
-          userSearch
-        };
+        await Book.find({ $text: { $search: userSearch } }, (err, book) => {
+          debug(err);
+          debug(book);
 
-        const db = client.db(dbName);
-        const col = await db.collection('books');
-        let book = await col.findOne({ title: search.userSearch });
-
-        if (!book) {
-          book = await col.findOne({ author: search.userSearch });
-        }
-
-        debug(book);
-        debug(search);
-
-        res.render(
-          'searchView',
-          {
-            nav,
-            title: 'Search',
-            search,
-            book
-          }
-        );
+          res.render(
+            'searchView',
+            {
+              nav,
+              title: 'Search Results',
+              userSearch,
+              book
+            }
+          );
+        });
       } catch (err) {
         debug(err.stack);
       }
-      client.close();
+      mongoose.disconnect();
     }());
   }
   return {
