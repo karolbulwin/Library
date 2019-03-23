@@ -89,7 +89,6 @@ function adminController(nav) {
     const url = 'mongodb://localhost:27017/libraryApp';
 
     (async function mongo() {
-      let client;
       try {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
         debug('Connected correctly to server - get all books for admin');
@@ -107,7 +106,7 @@ function adminController(nav) {
       } catch (err) {
         debug(err.stack);
       }
-      client.close();
+      mongoose.close();
     }());
   }
 
