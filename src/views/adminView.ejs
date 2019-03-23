@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title><%=title%></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#333" />
+  <meta name="description" content="Mini library">
+  <meta name="keywords" content="library, books">
+  <meta name="author" content="Karol Bulwin">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <!-- Bootstrap CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- CSS-->
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="d-flex justify-content-between flex-column min-vh-100">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Library</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <%for(let i=0; i<nav.length; i++) {%>
+            <li class="nav-item">
+              <a class="nav-link" href="<%=nav[i].link%>"><%=nav[i].title%></a>
+            </li>
+            <%}%>
+          </ul>
+          <form class="form-inline my-2 my-lg-0" action="/search" method="POST">
+            <input class="form-control mr-sm-2" name="userSearch" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+    </header>
+  
+    <main>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-12 text-center py-3">
+            <h1><%=title%></h1>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12 mb-2">
+            <h2>Books to pick up</h2>
+          </div>
+          <div class="col-12">
+            <% books.forEach((book) => { %>
+              <% if(book.reservedBy !== null) { %>
+                <p>Book: <span><%=book.title%></span> by <span><%=book.author%></span></p>
+                <p>User: <span><%=book.reservedBy%></span></p>
+                <a href="" class="btn btn-sm btn-outline-success mr-2">Give the book to the user</a>
+                <a href="" class="btn btn-sm btn-outline-success mr-2">Cancel</a>
+              <% } %>
+            <% }) %>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12 mb-2">
+            <h2>Rented books</h2>
+          </div>
+          <div class="col-12">
+            <% books.forEach((book) => { %>
+              <% if(book.rentedBy !== null) { %>
+                <p>Book: <span><%=book.title%></span> by <span><%=book.author%></span></p>
+                <p>User: <span><%=book.rentedBy%></span></p>
+                <a href="">Take the book from the user</a>
+              <% } %>
+            <% }) %> 
+          </div>
+        </div>
+        <div class="row mb-5">
+          <div class="col-12">
+            <h2 class="mb-3">Books</h2>
+            <% books.forEach((book) => { %>
+              <div class="row">    
+                  <div class="col-12">
+                    <p><%=book.title%></p>
+                    <p>by <%=book.author%></p>
+                  </div>
+                  <div class="col-12">
+                    <div class="row mx-2 align-items-baseline">
+                      <a href="" class="btn btn-sm btn-outline-success mr-2">Edit</a>
+                      <a href="" class="btn btn-sm btn-outline-success mr-2">Delete</a>
+
+                      <a href="/books/<%=book._id%>" class="btn btn-sm btn-outline-success mr-2">Read More</a>
+                      <% if (book.isReserved === false) { %>
+                        <p class="text-muted">Available</p>
+                      <% } else { %>
+                        <p class="text-muted">Unavailable</p>
+                      <% } %>
+                    </div>
+                  </div>
+              </div>
+              <hr>
+            <% }) %> 
+            <a href="" class="btn btn-sm btn-outline-success mr-2">Add new book!</a>
+          </div>
+        </div>       
+      </div>
+    </main>
+
+    <footer class="d-flex justify-content-center bg-light py-2">
+      <p class="my-0 small">Created by: Karol Bulwin</p>
+    </footer>
+  </div>
+  <!-- script references -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/custom-validation.js"></script>
+</body>
+
+</html>
