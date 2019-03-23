@@ -106,7 +106,7 @@ function adminController(nav) {
       } catch (err) {
         debug(err.stack);
       }
-      mongoose.close();
+      mongoose.disconnect();
     }());
   }
 
