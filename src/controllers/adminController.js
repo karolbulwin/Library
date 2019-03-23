@@ -80,7 +80,11 @@ const booksList = [
 function adminController(nav) {
   function middleware(req, res, next) {
     if (req.user) {
-      next();
+      if (req.user.username === 'admin') {
+        next();
+      } else {
+        res.redirect('/');
+      }
     } else {
       res.redirect('/');
     }
