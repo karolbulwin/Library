@@ -3,7 +3,7 @@ const debug = require('debug')('app:adminController');
 const chalk = require('chalk');
 const Book = require('../models/bookSchema');
 
-const books = [
+const booksList = [
   {
     title: 'The Hunger Games',
     genre: 'Fantasy',
@@ -77,7 +77,7 @@ const books = [
     reservedBy: null
   }];
 
-function authController(nav) {
+function adminController(nav) {
   function middleware(req, res, next) {
     if (req.user) {
       next();
@@ -86,11 +86,31 @@ function authController(nav) {
     }
   }
   function adminPage(req, res) {
-    res.render('adminView', {
-      nav,
-      title: 'Admin'
-    });
+    const url = 'mongodb://localhost:27017/libraryApp';
+
+    (async function mongo() {
+      let client;
+      try {
+        await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
+        debug('Connected correctly to server - get all books for admin');
+
+        await Book.find({}, (err, books) => {
+          debug(err);
+          debug(books);
+
+          res.render('adminView', {
+            nav,
+            title: 'Admin',
+            books
+          });
+        });
+      } catch (err) {
+        debug(err.stack);
+      }
+      client.close();
+    }());
   }
+
   function addBooks(req, res) {
     const url = 'mongodb://localhost:27017/libraryApp';
     (async function mongo() {
@@ -98,11 +118,11 @@ function authController(nav) {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
         debug(`${chalk.green('Connected correctly to server - add books')}`);
 
-        Book.collection.insertMany(books, (err) => {
+        Book.collection.insertMany(booksList, (err) => {
           if (err) {
             debug(err);
           }
-          res.json(books);
+          res.json(booksList);
         });
       } catch (err) {
         debug(err.stack);
@@ -117,4 +137,4 @@ function authController(nav) {
   };
 }
 
-module.exports = authController;
+module.exports = adminController;
