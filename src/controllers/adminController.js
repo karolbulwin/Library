@@ -103,7 +103,7 @@ function adminController(nav) {
 
           res.render('adminView', {
             nav,
-            title: 'Admin',
+            title: 'Book management',
             books
           });
         });
