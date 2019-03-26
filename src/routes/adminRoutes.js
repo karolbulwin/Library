@@ -7,6 +7,9 @@ function router(nav) {
   const {
     middleware,
     adminPage,
+    giveTheBookToTheUser,
+    cancelReservation,
+    takeTheBookFromTheUser,
     addBooks,
     addBook,
     editBook,
@@ -15,6 +18,12 @@ function router(nav) {
   adminRouter.use(middleware);
   adminRouter.route('/')
     .get(adminPage);
+  adminRouter.route('/giveBookToTheUser')
+    .post(giveTheBookToTheUser);
+  adminRouter.route('/cancelReservation')
+    .post(cancelReservation);
+  adminRouter.route('/takeTheBookFromTheUser')
+    .post(takeTheBookFromTheUser);
   adminRouter.route('/addBooks')
     .get(addBooks);
   adminRouter.route('/addBook')
