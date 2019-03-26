@@ -60,7 +60,7 @@
             <div class="col-12">
               <div class="row mx-2 align-items-baseline">
                 <a href="/books/<%=books[i]._id%>" class="btn btn-sm btn-outline-success mr-2">Read More</a>
-                <% if (books[i].isReserved === false) { %>
+                <% if (books[i].isReserved === false && books[i].isRented === false) { %>
                   <p class="text-muted">Available</p>
                 <% } else { %>
                   <p class="text-muted">Unavailable</p>
