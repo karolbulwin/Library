@@ -39,7 +39,8 @@ function bookController(bookService, nav) {
   }
   function reserveBook(req, res) {
     const {
-      _id
+      _id,
+      username
     } = req.user;
 
     const {
@@ -53,17 +54,13 @@ function bookController(bookService, nav) {
       let client;
       try {
         client = await MongoClient.connect(url, { useNewUrlParser: true });
-        debug('Connected correctly to server - reserve book');
+        debug('Connected correctly to server - reserve book - book');
 
         const book = {
           bookId,
           title,
           isReserved,
           reservedBy
-        };
-
-        const user = {
-          _id
         };
 
         const db = client.db(dbName);
@@ -74,7 +71,7 @@ function bookController(bookService, nav) {
           {
             $set: {
               isReserved: true,
-              reservedBy: new ObjectID(user._id)
+              reservedBy: username
             }
           }
         );
@@ -87,25 +84,18 @@ function bookController(bookService, nav) {
       let client;
       try {
         client = await MongoClient.connect(url, { useNewUrlParser: true });
-        debug('Connected correctly to server - user reserved a book');
-
-        const user = {
-          _id
-        };
-        const book = {
-          bookId
-        };
+        debug('Connected correctly to server - reserve book - user');
 
         const db = client.db(dbName);
         const col = await db.collection('users');
 
         await col.updateOne(
-          { _id: new ObjectID(user._id) },
-          { $set: { hasReserved: true, bookId: new ObjectID(book.bookId) } }
+          { _id: new ObjectID(_id) },
+          { $set: { hasReserved: true, bookId: new ObjectID(bookId), bookTitle: title } }
         );
 
         req.session.passport.user.hasReserved = true;
-        req.session.passport.user.bookId = new ObjectID(book.bookId);
+        req.session.passport.user.bookId = new ObjectID(bookId);
         req.session.save();
 
         res.redirect('/books/myBooks');
@@ -131,7 +121,7 @@ function bookController(bookService, nav) {
       let client;
       try {
         client = await MongoClient.connect(url, { useNewUrlParser: true });
-        debug('Connected correctly to server - unreserve book');
+        debug('Connected correctly to server - unreserve book - book');
 
         const book = {
           bookId,
@@ -161,7 +151,7 @@ function bookController(bookService, nav) {
       let client;
       try {
         client = await MongoClient.connect(url, { useNewUrlParser: true });
-        debug('Connected correctly to server - user unreserved a book');
+        debug('Connected correctly to server - unreserve book - user');
 
         const user = {
           _id
