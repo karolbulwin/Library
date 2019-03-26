@@ -55,56 +55,22 @@
           <div class="col-12 mb-2">
             <h2>Books to pick up</h2>
           </div>
-          <div class="col-12">
-            <% books.forEach((book) => { %>
-              <% if(book.reservedBy !== null) { %>
-                <p>Book: <span><%=book.title%></span> by <span><%=book.author%></span></p>
-                <p>User: <span><%=book.reservedBy%></span></p>
-                <a href="" class="btn btn-sm btn-outline-success mr-2">Give the book to the user</a>
-                <a href="" class="btn btn-sm btn-outline-success mr-2">Cancel</a>
-              <% } %>
-            <% }) %>
+          <div id="books-to-pick-up" class="col-12">
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-12 mb-2">
             <h2>Rented books</h2>
           </div>
-          <div class="col-12">
-            <% books.forEach((book) => { %>
-              <% if(book.rentedBy !== null) { %>
-                <p>Book: <span><%=book.title%></span> by <span><%=book.author%></span></p>
-                <p>User: <span><%=book.rentedBy%></span></p>
-                <a href="">Take the book from the user</a>
-              <% } %>
-            <% }) %> 
+          <div id="rented-books" class="col-12">
           </div>
         </div>
         <div class="row mb-5">
           <div class="col-12">
-            <h2 class="mb-3">Books</h2>
-            <% books.forEach((book) => { %>
-              <div class="row">    
-                  <div class="col-12">
-                    <p><%=book.title%></p>
-                    <p>by <%=book.author%></p>
-                  </div>
-                  <div class="col-12">
-                    <div class="row mx-2 align-items-baseline">
-                      <a href="" class="btn btn-sm btn-outline-success mr-2">Edit</a>
-                      <a href="" class="btn btn-sm btn-outline-success mr-2">Delete</a>
-
-                      <a href="/books/<%=book._id%>" class="btn btn-sm btn-outline-success mr-2">Read More</a>
-                      <% if (book.isReserved === false) { %>
-                        <p class="text-muted">Available</p>
-                      <% } else { %>
-                        <p class="text-muted">Unavailable</p>
-                      <% } %>
-                    </div>
-                  </div>
-              </div>
-              <hr>
-            <% }) %> 
+            <h2 class="mb-4">Books</h2>
+            <div id="all-books">
+            </div>
+            <a href="/admin/addBooks" class="btn btn-sm btn-outline-success mr-2">Add books - sample</a>
             <a href="" class="btn btn-sm btn-outline-success mr-2">Add new book!</a>
           </div>
         </div>       
@@ -119,6 +85,201 @@
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/custom-validation.js"></script>
+  <script>
+      
+  function loadBooksFromDB() {
+    const books = <%- JSON.stringify(books) %>;
+    return books;
+  }
+
+  function createBookElementToPickUp(book) {
+    const div = document.createElement('div');
+    const pBook = document.createElement('p');
+    const pUser = document.createElement('p');
+    const sTitle = document.createElement('span');
+    const sAuthor = document.createElement('span');
+    const sReservedBy = document.createElement('span');
+    const bGive = document.createElement('buton');
+    const aCancel = document.createElement('buton');
+
+    div.classList.add('py-2');
+
+    pBook.innerText = 'Book: ';
+    sTitle.innerText = book.title;
+    pBook.appendChild(sTitle);
+    pBook.innerText += ' by ';
+    sAuthor.innerText = book.author;
+    pBook.appendChild(sAuthor);
+    div.appendChild(pBook);
+
+    pUser.innerText = 'User ';
+    sReservedBy.innerText = book.reservedBy;
+    pUser.appendChild(sReservedBy);
+    div.appendChild(pUser);
+
+    bGive.innerText = 'Give the book to the user';
+    bGive.classList.add('btn', 'btn-sm', 'btn-outline-success', 'mr-2');
+    div.appendChild(bGive);
+
+    aCancel.innerText = 'Cancel';
+    aCancel.classList.add('btn', 'btn-sm', 'btn-outline-success', 'mr-2');
+    div.appendChild(aCancel);
+
+    bGive.onclick = () => {
+      const b = JSON.stringify(book);
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('POST', '/admin/giveBookToTheUser', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(b);
+    };
+    aCancel.onclick = () => {
+      const b = JSON.stringify(book);
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('POST', '/admin/cancelReservation', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(b);
+    };
+
+    return div;
+  }
+  (function booksToPickUp() {
+    const books = loadBooksFromDB();
+    const booksToPickUpContainer = document.querySelector('#books-to-pick-up');
+    let bookToAdd;
+    books.forEach((book) => {
+      if (book.reservedBy !== null) {
+        bookToAdd = createBookElementToPickUp(book);
+        booksToPickUpContainer.appendChild(bookToAdd);
+      }
+    });
+  }());
+
+  function createRentedBookElement(book) {
+    const div = document.createElement('div');
+    const pBook = document.createElement('p');
+    const pUser = document.createElement('p');
+    const sTitle = document.createElement('span');
+    const sAuthor = document.createElement('span');
+    const sRentedBy = document.createElement('span');
+    const bTake = document.createElement('buton');
+
+    div.classList.add('py-2');
+
+    pBook.innerText = 'Book: ';
+    sTitle.innerText = book.title;
+    pBook.appendChild(sTitle);
+    pBook.innerText += ' by ';
+    sAuthor.innerText = book.author;
+    pBook.appendChild(sAuthor);
+    div.appendChild(pBook);
+
+    pUser.innerText = 'User: ';
+    sRentedBy.innerText = book.rentedBy;
+    pUser.appendChild(sRentedBy);
+    div.appendChild(pUser);
+
+    bTake.innerText = 'Take the book from the user';
+    bTake.classList.add('btn', 'btn-sm', 'btn-outline-success', 'mr-2');
+    div.appendChild(bTake);
+
+    bTake.onclick = () => {
+      const b = JSON.stringify(book);
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('POST', '/admin/takeTheBookFromTheUser', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(b);
+    };
+
+    return div;
+  }
+  (function booksToTake() {
+    const books = loadBooksFromDB();
+    const rentedBooks = document.querySelector('#rented-books');
+    let rentedBook;
+    books.forEach((book) => {
+      if (book.rentedBy !== null) {
+        rentedBook = createRentedBookElement(book);
+        rentedBooks.appendChild(rentedBook);
+      }
+    });
+  }());
+
+  function createBookElement(book) {
+    const divContent = document.createElement('div');
+    const div = document.createElement('div');
+    const cdivTitleAuthor = document.createElement('div');
+    const cdivButtons = document.createElement('div');
+    const hr = document.createElement('hr');
+
+    const pTtitle = document.createElement('p');
+    const pAuthor = document.createElement('p');
+
+    const rdiv = document.createElement('div');
+    const editBtn = document.createElement('button');
+    const deleteBtn = document.createElement('button');
+    const readBtn = document.createElement('button');
+
+    div.classList.add('row');
+    cdivTitleAuthor.classList.add('col-12');
+    cdivButtons.classList.add('col-12');
+
+    pTtitle.innerText = book.title;
+    cdivTitleAuthor.appendChild(pTtitle);
+
+    pAuthor.innerText = 'by ';
+    pAuthor.innerText += book.author;
+    cdivTitleAuthor.appendChild(pAuthor);
+
+    div.appendChild(cdivTitleAuthor);
+
+    rdiv.classList.add('row', 'mx-2', 'align-items-baseline');
+    editBtn.classList.add('btn', 'btn-sm', 'btn-outline-success', 'mr-2');
+    editBtn.innerText = 'Edit';
+    deleteBtn.classList.add('btn', 'btn-sm', 'btn-outline-success', 'mr-2');
+    deleteBtn.innerText = 'Delete';
+    readBtn.classList.add('btn', 'btn-sm', 'btn-outline-success', 'mr-2');
+    readBtn.href = `/books/${book._id}`;
+    readBtn.innerText = 'Read More';
+
+    rdiv.appendChild(editBtn);
+    rdiv.appendChild(deleteBtn);
+    rdiv.appendChild(readBtn);
+    cdivButtons.appendChild(rdiv);
+
+    div.appendChild(cdivTitleAuthor);
+    div.appendChild(cdivButtons);
+
+    divContent.appendChild(div);
+    divContent.appendChild(hr);
+
+
+    // editBtn
+
+    deleteBtn.onclick = () => {
+      const b = JSON.stringify(book);
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('POST', '/admin/deleteBook', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(b);
+    };
+
+    return divContent;
+  }
+  (function bookManagement() {
+    const books = loadBooksFromDB();
+    const allBooks = document.querySelector('#all-books');
+    let bookToAdd;
+    books.forEach((book) => {
+      bookToAdd = createBookElement(book);
+      allBooks.appendChild(bookToAdd);
+    });
+  }());
+
+  </script>
 </body>
 
 </html>
