@@ -50,6 +50,11 @@
           <div class="col-12">
             <h1>My books</h1>
           </div>
+          <% if (user.hasRented != false) { %>
+            <div class="col-12">
+              <h2>You have: <span><%=book.title%></span> by <span><%=book.author%></span></h2>
+            </div>
+          <% } %>
           <div class="col-12">
             <h2>You<span id="book-to-pick"> don't</span> have a book to pick up!</h2>
           </div>
