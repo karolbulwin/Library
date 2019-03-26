@@ -89,7 +89,7 @@
   <script src="../../js/custom-validation.js"></script>
   <script>
 
-  if (document.querySelector("#isReserved").value === "true"
+  if (<%=book.isReserved%> === true || <%=book.isRented%> === true
     || <%=user.hasRented%> === true || <%=user.hasReserved%> === true) {
     document.querySelector("#btn-reserve").disabled = true;
     document.querySelector('#avaliable-for-user').innerText = 'can\'t';
