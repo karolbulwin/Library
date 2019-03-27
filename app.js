@@ -17,7 +17,7 @@ app.use(morgan('dev'));
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public/'),
   dest: path.join(__dirname, 'public/'),
-  debug: true,
+  debug: false,
   outputStyle: 'compressed',
   indentedSyntax: false,
   sourceMap: true
