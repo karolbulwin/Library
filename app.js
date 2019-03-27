@@ -62,13 +62,17 @@ app.use('/search', searchRouter);
 
 app.get('/', (req, res) => {
   if (req.user) {
-    res.render(
-      'indexLogout',
-      {
-        nav,
-        title: 'Library'
-      }
-    );
+    if (req.user.username === 'admin') {
+      res.redirect('/admin');
+    } else {
+      res.render(
+        'indexLogout',
+        {
+          nav,
+          title: 'Library'
+        }
+      );
+    }
   } else {
     res.render(
       'index',
