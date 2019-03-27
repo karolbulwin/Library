@@ -70,7 +70,7 @@
             <h2 class="mb-4">Books</h2>
             <div id="all-books">
             </div>
-            <a href="/admin/addBooks" class="btn btn-sm btn-outline-success mr-2">Add books - sample</a>
+            <a id="add-books-sample" href="/admin/addBooks" class="btn btn-sm btn-outline-success mr-2">Add books - sample</a>
             <button id='add-new-book' class="btn btn-sm btn-outline-success mr-2" data-toggle="modal" data-target="#book-modal">Add new book!</button>
           </div>
         </div>       
@@ -143,17 +143,22 @@
   <script src="js/custom-validation.js"></script>
   <script>
 
-  function setModalTitle() {
-    document.querySelector('#book-info').innerText = 'Enter the details of the book below';
+  function setModalTitle(text) {
+    document.querySelector('#book-info').innerText = text;
+  }
+
+  function getBookValues() {
+    const book = {};    
+    book.title = document.querySelector('#title').value;
+    book.author = document.querySelector('#author').value;
+    book.genre = document.querySelector('#genre').value;
+    return book;
   }
 
   document.querySelector("#add-new-book").onclick = () => {
-    setModalTitle();
+    setModalTitle('Enter the details of the book below');
     document.querySelector('#save-bttn').onclick = () => {
-      const book = {};    
-      book.title = document.querySelector('#title').value;
-      book.author = document.querySelector('#author').value;
-      book.genre = document.querySelector('#genre').value;
+      const book = getBookValues();    
 
       const b = JSON.stringify(book);
       const xhr = new XMLHttpRequest();
@@ -368,7 +373,7 @@
 
     editBtn.onclick = () => {
       setBookValues();
-      document.querySelector('#book-info').innerText = 'Book editing';
+      setModalTitle('Book editing');
       
       document.querySelector('#save-bttn').onclick = () => {
         book.title = document.querySelector('#title').value;
@@ -418,6 +423,7 @@
   }());
 
   </script>
+  <script src="js/hide-add-books-btn.js"></script>
 </body>
 
 </html>
