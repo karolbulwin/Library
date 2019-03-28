@@ -36,7 +36,10 @@ const userSchema = new Schema({
   hasReserved: {
     type: Boolean
   },
-  bookId: {
+  reservedBookId: {
+    type: Object
+  },
+  rentedBookId: {
     type: Object
   }
 });
