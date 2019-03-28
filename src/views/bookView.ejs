@@ -61,19 +61,9 @@
             <a href="<%=book.details.link%>" class="btn btn-outline-success float-right">Read more on Goodreads <i class="fab fa-goodreads    "></i></a>
           </div>
           <div class="col-12 container-fluid pb-4 col-md-10">
-            <form name="reserveForm" action="/books/reserveBook" method="post">
-              <div class="hidden">
-                <label for="bookId"></label>
-                <input type="text" class="form-control" name="bookId" id="bookId" placeholder="book id" value="<%=book._id%>" required>    
-                <label for="title"></label>
-                <input type="text" class="form-control" name="title" id="title" placeholder="book title" value="<%=book.title%>" required>  
-                <label for="isReserved"></label>
-                <input type="text" class="form-control" name="isReserved" id="isReserved" placeholder="reserve a book" value="<%=book.isReserved%>" required>
-              </div>
-              <p>You <span id="avaliable-for-user">can</span> reserve that book!</p>
-              <p id="info-for-user"></p>
-              <button id="btn-reserve" type="submit" class="btn btn-outline-success">Reserve</button>
-            </form>
+            <p>You <span id="avaliable-for-user">can</span> reserve that book!</p>
+            <p id="info-for-user"></p>
+            <button id="btn-reserve" type="button" class="btn btn-outline-success">Reserve</button>
           </div>
         </div>
       </div>
@@ -99,6 +89,25 @@
     document.querySelector('#info-for-user').innerText = 'You already rented or reserved one!';
   }
   
+  function loadBookFromDB() {
+    const book = {
+      _id: '<%= (book._id) %>',
+      title: '<%= (book.title) %>',
+      isReserved: '<%= (book.isReserved) %>',
+      reservedBy: '<%= (book.reservedBy) %>'
+    };
+    return book;
+  }
+
+  document.querySelector('#btn-reserve').onclick = () => {
+      const b = JSON.stringify(loadBookFromDB());
+      const xhr = new XMLHttpRequest();
+      
+      xhr.open('POST', '/books/reserveBook', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(b);
+    };
+
   </script>
 </body>
 
