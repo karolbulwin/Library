@@ -410,6 +410,11 @@
       xhr.send(b);
     };
 
+    if (book.isReserved || book.isRented) {
+      editBtn.setAttribute('disabled', true);
+      deleteBtn.setAttribute('disabled', true);
+    }
+
     return divContent;
   }
   (function bookManagement() {
