@@ -64,20 +64,10 @@
               <h4 class="pb-2">by <%=book.author%></h4>
             </div>
             <div class="col-12">
-              <form name="unreserveForm" action="/books/unreserveBook" method="post">
-                <div class="hidden">
-                  <label for="bookId"></label>
-                  <input type="text" class="form-control" name="bookId" id="bookId" placeholder="book id" value="<%=book._id%>" required>    
-                  <label for="title"></label>
-                  <input type="text" class="form-control" name="title" id="title" placeholder="book title" value="<%=book.title%>" required>  
-                  <label for="isReserved"></label>
-                  <input type="text" class="form-control" name="isReserved" id="isReserved" placeholder="reserved book" value="<%=book.isReserved%>" required>
-                </div>
-                <div class="info-for-user">
-                  <p>You can unreserve that book and reserved another one!</p>
-                  <button id="btn-unreserve" type="submit" class="btn btn-outline-success" disabled>Unreserve</button>    
-                </div>
-              </form>
+              <div class="info-for-user">
+                <p>You can unreserve that book and reserved another one!</p>
+                <button id="btn-unreserve" type="button" class="btn btn-outline-success" disabled>Unreserve</button>
+              </div>
             </div>
           <% } %>
         </div>
@@ -94,18 +84,42 @@
   <script src="../../js/custom-validation.js"></script>
   <script>
 
+  function loadBookFromDB() {
+    <% if (book) { %>
+    const book = {
+      _id: '<%= (book._id) %>',
+      title: '<%= (book.title) %>',
+      isReserved: '<%= (book.isReserved) %>',
+      reservedBy: '<%= (book.reservedBy) %>'
+    };
+    <% } %>
+    return book;
+  }
+  function unreserveBook() {
+    document.querySelector('#btn-unreserve').onclick = () => {
+      const b = JSON.stringify(loadBookFromDB());
+      console.log(b);
+      const xhr = new XMLHttpRequest();
+      
+      xhr.open('POST', '/books/unreserveBook', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(b);
+    };
+  }
+
   <% if (book) { %>
     if (<%=book.isReserved%> === true
     || <%=user.hasReserved%> === true) {
       document.querySelector("#btn-unreserve").disabled = false;
       document.querySelector('#book-to-pick').innerText = '';
+      unreserveBook();
     } else {
       document.querySelectorAll('.info-for-user').forEach((element) => {
         element.classList.add('hidden');
       });
     }
   <% } %>
-  
+
   </script>
 </body>
 
