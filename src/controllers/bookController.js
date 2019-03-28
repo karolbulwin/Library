@@ -39,16 +39,15 @@ function bookController(bookService, nav) {
   }
   function reserveBook(req, res) {
     const {
-      _id,
       username
     } = req.user;
 
-    const {
-      bookId,
-      title,
-      isReserved,
-      reservedBy
-    } = req.body;
+    const book = {
+      _id: req.body._id,
+      title: req.body.title,
+      isReserved: req.body.isReserved,
+      reservedBy: req.body.reservedBy
+    };
 
     (async function mongo() {
       let client;
@@ -56,18 +55,11 @@ function bookController(bookService, nav) {
         client = await MongoClient.connect(url, { useNewUrlParser: true });
         debug('Connected correctly to server - reserve book - book');
 
-        const book = {
-          bookId,
-          title,
-          isReserved,
-          reservedBy
-        };
-
         const db = client.db(dbName);
         const col = await db.collection('books');
 
         await col.updateOne(
-          { _id: new ObjectID(book.bookId) },
+          { _id: new ObjectID(book._id) },
           {
             $set: {
               isReserved: true,
@@ -90,15 +82,15 @@ function bookController(bookService, nav) {
         const col = await db.collection('users');
 
         await col.updateOne(
-          { _id: new ObjectID(_id) },
-          { $set: { hasReserved: true, bookId: new ObjectID(bookId), bookTitle: title } }
+          { username },
+          { $set: { hasReserved: true, reservedBookId: new ObjectID(book._id) } }
         );
 
         req.session.passport.user.hasReserved = true;
-        req.session.passport.user.bookId = new ObjectID(bookId);
+        req.session.passport.user.reservedBookId = new ObjectID(book._id);
         req.session.save();
 
-        res.redirect('/books/myBooks');
+        res.redirect('/books/myBooks'); // dont work with ajax -- need to correct it
       } catch (err) {
         debug(err.stack);
       }
@@ -107,15 +99,15 @@ function bookController(bookService, nav) {
   }
   function unreserveBook(req, res) {
     const {
-      _id
+      username
     } = req.user;
 
-    const {
-      bookId,
-      title,
-      isReserved,
-      reservedBy
-    } = req.body;
+    const book = {
+      _id: req.body._id,
+      title: req.body.title,
+      isReserved: req.body.isReserved,
+      reservedBy: req.body.reservedBy
+    };
 
     (async function mongo() {
       let client;
@@ -123,18 +115,11 @@ function bookController(bookService, nav) {
         client = await MongoClient.connect(url, { useNewUrlParser: true });
         debug('Connected correctly to server - unreserve book - book');
 
-        const book = {
-          bookId,
-          title,
-          isReserved,
-          reservedBy
-        };
-
         const db = client.db(dbName);
         const col = await db.collection('books');
 
         await col.updateOne(
-          { _id: new ObjectID(book.bookId) },
+          { _id: new ObjectID(book._id) },
           {
             $set: {
               isReserved: false,
@@ -153,23 +138,19 @@ function bookController(bookService, nav) {
         client = await MongoClient.connect(url, { useNewUrlParser: true });
         debug('Connected correctly to server - unreserve book - user');
 
-        const user = {
-          _id
-        };
-
         const db = client.db(dbName);
         const col = await db.collection('users');
 
         await col.updateOne(
-          { _id: new ObjectID(user._id) },
-          { $set: { hasReserved: false, bookId: null } }
+          { username },
+          { $set: { hasReserved: false, reservedBookId: null } }
         );
 
         req.session.passport.user.hasReserved = false;
-        req.session.passport.user.bookId = null;
+        req.session.passport.user.reservedBookId = null;
         req.session.save();
 
-        res.redirect('/books');
+        res.redirect('/books'); // dont work with ajax -- need to correct it
       } catch (err) {
         debug(err.stack);
       }
@@ -177,11 +158,13 @@ function bookController(bookService, nav) {
     }());
   }
   function getMyBooks(req, res) {
-    const {
-      hasReserved,
-      hasRented,
-      bookId
-    } = req.user;
+    const user = {
+      hasReserved: req.user.hasReserved,
+      hasRented: req.user.hasRented,
+      reservedBookId: req.user.reservedBookId
+    };
+
+    debug(user);
 
     (async function mongo() {
       let client;
@@ -189,15 +172,11 @@ function bookController(bookService, nav) {
         client = await MongoClient.connect(url, { useNewUrlParser: true });
         debug('Connected correctly to server - my book');
 
-        const user = {
-          hasReserved,
-          hasRented,
-          bookId
-        };
-
         const db = client.db(dbName);
         const col = await db.collection('books');
-        const book = await col.findOne({ _id: new ObjectID(user.bookId) });
+        const book = await col.findOne({ _id: new ObjectID(user.reservedBookId) });
+
+        debug(book);
 
         res.render(
           'myBooksView',
@@ -216,21 +195,16 @@ function bookController(bookService, nav) {
   }
   function getById(req, res) {
     const { id } = req.params;
-    const {
-      hasReserved,
-      hasRented
-    } = req.user;
+    const user = {
+      hasReserved: req.user.hasReserved,
+      hasRented: req.user.hasRented
+    };
 
     (async function mongo() {
       let client;
       try {
         client = await MongoClient.connect(url, { useNewUrlParser: true });
         debug('Connected correctly to server - get one book');
-
-        const user = {
-          hasReserved,
-          hasRented
-        };
 
         const db = client.db(dbName);
         const col = await db.collection('books');
