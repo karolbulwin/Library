@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ObjectID } = require('mongodb');
 const debug = require('debug')('app:adminController');
 const chalk = require('chalk');
 const Book = require('../models/bookSchema');
@@ -129,7 +130,9 @@ function adminController(nav) {
 
         await User.findOneAndUpdate({ username: reservedBy }, {
           hasRented: true,
-          hasReserved: false
+          hasReserved: false,
+          reservedBookId: null,
+          rentedBookId: new ObjectID(_id)
         }, (err, user) => {
           if (err) {
             debug(err);
@@ -207,7 +210,7 @@ function adminController(nav) {
 
         await User.findOneAndUpdate({ username: reservedBy }, {
           hasReserved: false,
-          bookId: null
+          reservedBookId: null
         }, (err, user) => {
           if (err) {
             debug(err);
@@ -263,7 +266,7 @@ function adminController(nav) {
 
         await User.findOneAndUpdate({ username }, {
           hasRented: false,
-          bookId: null
+          rentedBookId: null
         }, (err, user) => {
           if (err) {
             debug(err);
