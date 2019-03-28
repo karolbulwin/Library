@@ -103,6 +103,10 @@
       const b = JSON.stringify(loadBookFromDB());
       const xhr = new XMLHttpRequest();
       
+      xhr.onload = () => {
+        window.location.href = '/books/myBooks'
+      }
+
       xhr.open('POST', '/books/reserveBook', true);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send(b);
