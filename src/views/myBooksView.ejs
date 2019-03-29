@@ -101,7 +101,8 @@
       const xhr = new XMLHttpRequest();
       
       xhr.onload = () => {
-        window.location.href = '/books'
+        const res = JSON.parse(xhr.response);
+        window.location.replace(res.url);
       }
 
       xhr.open('POST', '/books/unreserveBook', true);
