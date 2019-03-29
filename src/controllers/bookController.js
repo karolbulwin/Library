@@ -90,7 +90,7 @@ function bookController(bookService, nav) {
         req.session.passport.user.reservedBookId = new ObjectID(book._id);
         req.session.save();
 
-        res.redirect('/books/myBooks'); // dont work with ajax -- need to correct it
+        res.status(200).send({ result: 'redirect', url: '/books/myBooks' });
       } catch (err) {
         debug(err.stack);
       }
@@ -150,7 +150,7 @@ function bookController(bookService, nav) {
         req.session.passport.user.reservedBookId = null;
         req.session.save();
 
-        res.redirect('/books'); // dont work with ajax -- need to correct it
+        res.status(200).send({ result: 'redirect', url: '/books' });
       } catch (err) {
         debug(err.stack);
       }
