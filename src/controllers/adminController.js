@@ -231,6 +231,24 @@ function adminController(nav) {
       username
     } = req.user;
 
+    (async function updateUser() {
+      try {
+        await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
+        debug(`${chalk.green('Connected correctly to server - giveTheBookToTheUser - user')}`);
+
+        await User.findOneAndUpdate({ username }, {
+          hasRented: false,
+          rentedBookId: null
+        }, (err) => {
+          if (err) {
+            debug(err);
+          }
+        });
+      } catch (err) {
+        debug(err.stack);
+      }
+      mongoose.disconnect();
+    }());
     (async function updateBook() {
       try {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
@@ -240,36 +258,14 @@ function adminController(nav) {
           isRented: false,
           rentedBy: null
         }, (err, book) => {
-          debug('1');
           if (err) {
             debug(err);
           }
-          debug(book);
-          debug('1');
-        });
-      } catch (err) {
-        debug(err.stack);
-      }
-      mongoose.disconnect();
-    }());
-    (async function updateUser() {
-      try {
-        await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
-        debug(`${chalk.green('Connected correctly to server - giveTheBookToTheUser - user')}`);
-
-        await User.findOneAndUpdate({ username }, {
-          hasRented: false,
-          rentedBookId: null
-        }, (err, user) => {
-          if (err) {
-            debug(err);
+          if (book) {
+            debug('book taken');
+            res.status(200).send({ result: 'taken' });
           }
-          debug('2');
-
-          debug(user);
-          debug('2');
         });
-        res.redirect('/admin'); // dont work with mongoose - use reload on client page -- need to change it!
       } catch (err) {
         debug(err.stack);
       }
