@@ -336,8 +336,7 @@
     pTtitle.innerText = book.title;
     cdivTitleAuthor.appendChild(pTtitle);
 
-    pAuthor.innerText = 'by ';
-    pAuthor.innerText += book.author;
+    pAuthor.innerText = `by ${book.author}`;
     cdivTitleAuthor.appendChild(pAuthor);
 
     div.appendChild(cdivTitleAuthor);
@@ -383,10 +382,13 @@
         const b = JSON.stringify(book);
         const xhr = new XMLHttpRequest();
         
-        xhr.onreadystatechange = () => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 200);
+        xhr.onload = () => {
+          const res = JSON.parse(xhr.response);
+          if (res.result === 'changed') {
+            document.querySelector('.close[type=button]').click();
+            pTtitle.innerText = book.title;
+            pAuthor.innerText = `by ${book.author}`;
+          }
         };
         
         xhr.open('POST', '/admin/editBook', true);
@@ -399,10 +401,11 @@
       const b = JSON.stringify(book);
       const xhr = new XMLHttpRequest();
 
-      xhr.onreadystatechange = () => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 200);
+      xhr.onload = () => {
+        const res = JSON.parse(xhr.response);
+        if (res.result === 'deleted') {
+          divContent.remove();
+        }
       };
 
       xhr.open('POST', '/admin/deleteBook', true);
