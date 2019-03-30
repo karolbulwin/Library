@@ -306,7 +306,12 @@
         if (res.result === 'taken') {
           document.querySelector('.close[type=button]').click();
           div.remove();
-          // buttons
+          bookId = res.bookId;
+          const bttnDiv = document.getElementById(bookId);
+          const buttons = bttnDiv.querySelectorAll('button');
+          buttons.forEach((button) => {
+            button.removeAttribute('disabled');
+          });
         }
       };
 
@@ -346,6 +351,7 @@
 
     div.classList.add('row');
     cdivTitleAuthor.classList.add('col-12');
+    cdivButtons.id = book._id;
     cdivButtons.classList.add('col-12');
 
     pTtitle.innerText = book.title;
