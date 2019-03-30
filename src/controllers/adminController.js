@@ -337,7 +337,7 @@ function adminController(nav) {
           if (err) {
             debug(err);
           }
-          res.redirect('/admin'); // dont work with mongoose - use reload on client page -- need to change it!
+          res.redirect('/admin');
         });
       } catch (err) {
         debug(err.stack);
