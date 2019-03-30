@@ -25,7 +25,6 @@ function searchController(nav) {
 
         await Book.find({ $text: { $search: userSearch } }, (err, book) => {
           debug(err);
-          debug(book);
 
           res.render(
             'searchView',
