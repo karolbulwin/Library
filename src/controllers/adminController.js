@@ -133,14 +133,10 @@ function adminController(nav) {
           hasReserved: false,
           reservedBookId: null,
           rentedBookId: new ObjectID(_id)
-        }, (err, user) => {
+        }, (err) => {
           if (err) {
             debug(err);
           }
-          debug('2');
-
-          debug(user);
-          debug('2');
         });
       } catch (err) {
         debug(err.stack);
@@ -157,15 +153,14 @@ function adminController(nav) {
           isReserved: false,
           rentedBy: reservedBy,
           reservedBy: null
-        }, (err, s) => {
-          debug('1');
+        }, (err, book) => {
           if (err) {
             debug(err);
           }
-          debug(s);
-          debug('1');
-
-          res.redirect('/admin'); // dont work with mongoose - use reload on client page -- need to change it!
+          if (book) {
+            debug('book given');
+            res.status(200).send({ result: 'given', bookId: _id, rentedBy: book.reservedBy });
+          }
         });
       } catch (err) {
         debug(err.stack);
