@@ -44,6 +44,7 @@ const userSchema = new Schema({
   }
 });
 
+/* for further dev */
 userSchema.index({
   firstName: 'text',
   lastName: 'text',
