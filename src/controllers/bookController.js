@@ -161,10 +161,9 @@ function bookController(bookService, nav) {
     const user = {
       hasReserved: req.user.hasReserved,
       hasRented: req.user.hasRented,
-      reservedBookId: req.user.reservedBookId
+      reservedBookId: req.user.reservedBookId,
+      rentedBookId: req.user.rentedBookId
     };
-
-    debug(user);
 
     (async function mongo() {
       let client;
@@ -174,9 +173,12 @@ function bookController(bookService, nav) {
 
         const db = client.db(dbName);
         const col = await db.collection('books');
-        const book = await col.findOne({ _id: new ObjectID(user.reservedBookId) });
-
-        debug(book);
+        let book;
+        if (user.reservedBookId !== null) {
+          book = await col.findOne({ _id: new ObjectID(user.reservedBookId) });
+        } else {
+          book = await col.findOne({ _id: new ObjectID(user.rentedBookId) });
+        }
 
         res.render(
           'myBooksView',
