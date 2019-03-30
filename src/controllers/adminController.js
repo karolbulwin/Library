@@ -381,12 +381,18 @@ function adminController(nav) {
           author,
           genre,
           isReserved: false,
-          isRented: false
+          isRented: false,
+          rentedBy: null,
+          reservedBy: null
         });
 
-        await newBook.save((err) => {
+        await newBook.save((err, book) => {
           if (err) {
             debug(err);
+          }
+          if (book) {
+            debug('book added');
+            res.status(200).send({ result: 'added', bookId: book._id });
           }
         });
       } catch (err) {
