@@ -340,13 +340,13 @@ function adminController(nav) {
   }
   function editBook(req, res) {
     const url = 'mongodb://localhost:27017/libraryApp';
-    debug(req.body);
     const {
       _id,
       title,
       author,
       genre
     } = req.body;
+    
     (async function mongo() {
       try {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
@@ -356,15 +356,14 @@ function adminController(nav) {
           title,
           author,
           genre
-        }, (err, s) => {
-          debug('1');
+        }, (err, book) => {
           if (err) {
             debug(err);
           }
-          debug(s);
-          debug('1');
-
-          res.redirect('/admin'); // dont work with mongoose - use reload on client page -- need to change it!
+          if (book) {
+            debug('book changed');
+            res.status(200).send({ result: 'changed' });
+          }
         });
       } catch (err) {
         debug(err.stack);
@@ -374,7 +373,6 @@ function adminController(nav) {
   }
   function deleteBook(req, res) {
     const url = 'mongodb://localhost:27017/libraryApp';
-
     const {
       _id
     } = req.body;
@@ -384,12 +382,14 @@ function adminController(nav) {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
         debug(`${chalk.green('Connected correctly to server - delete book')}`);
 
-        await Book.findOneAndDelete({ _id }, (err) => {
+        await Book.findOneAndDelete({ _id }, (err, book) => {
           if (err) {
             debug(err);
           }
-          debug('book deleted');
-          // res.redirect('/admin'); dont work with mongoose - use reload on client page -- need to change it!
+          if (book) {
+            debug('book deleted');
+            res.status(200).send({ result: 'deleted' });
+          }
         });
       } catch (err) {
         debug(err.stack);
