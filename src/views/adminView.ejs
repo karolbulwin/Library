@@ -163,10 +163,14 @@
       const b = JSON.stringify(book);
       const xhr = new XMLHttpRequest();
       
-      xhr.onreadystatechange = () => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 200);
+      xhr.onload = () => {
+        const res = JSON.parse(xhr.response);
+        if (res.result === 'added') {
+          document.querySelector('.close[type=button]').click();
+          book._id = res.bookId;
+          const bookToAdd = createBookElement(book);
+          document.querySelector('#all-books').appendChild(bookToAdd);
+        }
       };
       
       xhr.open('POST', '/admin/addBook', true);
