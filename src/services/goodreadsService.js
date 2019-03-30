@@ -14,9 +14,6 @@ function goodreadsService() {
       const newTitle = title.replace(/ /g, '+');
 
       debug(chalk.red('GoodreadsService'));
-      debug(chalk.red(title));
-      debug(chalk.red(authorLast));
-      debug(chalk.red((`https://www.goodreads.com/book/title.xml?author=${authorLast}&key=${yourKey}&title=${newTitle}`)));
       axios.get(`https://www.goodreads.com/book/title.xml?author=${authorLast}&key=${yourKey}&title=${newTitle}`)
         .then((response) => {
           parser.parseString(response.data, (err, result) => {
