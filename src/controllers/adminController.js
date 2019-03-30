@@ -258,7 +258,7 @@ function adminController(nav) {
           }
           if (book) {
             debug('book taken');
-            res.status(200).send({ result: 'taken' });
+            res.status(200).send({ result: 'taken', bookId: _id });
           }
         });
       } catch (err) {
