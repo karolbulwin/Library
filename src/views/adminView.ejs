@@ -295,10 +295,13 @@
       const b = JSON.stringify(book);
       const xhr = new XMLHttpRequest();
       
-      xhr.onreadystatechange = () => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 200);
+      xhr.onload = () => {
+        const res = JSON.parse(xhr.response);
+        if (res.result === 'taken') {
+          document.querySelector('.close[type=button]').click();
+          div.remove();
+          // buttons
+        }
       };
 
       xhr.open('POST', '/admin/takeTheBookFromTheUser', true);
