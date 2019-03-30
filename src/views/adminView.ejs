@@ -222,10 +222,16 @@
       const b = JSON.stringify(book);
       const xhr = new XMLHttpRequest();
 
-      xhr.onreadystatechange = () => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 200);
+      xhr.onload = () => {
+        const res = JSON.parse(xhr.response);
+        if (res.result === 'given') {
+          document.querySelector('.close[type=button]').click();
+          div.remove();
+          book._id = res.bookId;
+          book.rentedBy = res.rentedBy;
+          const rentedBook = createRentedBookElement(book);
+          document.querySelector('#rented-books').appendChild(rentedBook);
+        }
       };
 
       xhr.open('POST', '/admin/giveBookToTheUser', true);
