@@ -229,7 +229,7 @@ function adminController(nav) {
     (async function updateUser() {
       try {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
-        debug(`${chalk.green('Connected correctly to server - giveTheBookToTheUser - user')}`);
+        debug(`${chalk.green('Connected correctly to server - takeBookFromTheUser - user')}`);
 
         await User.findOneAndUpdate({ username }, {
           hasRented: false,
