@@ -180,8 +180,24 @@ function adminController(nav) {
       reservedBy
     } = req.body;
 
-    debug(req.body);
+    (async function updateUser() {
+      try {
+        await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
+        debug(`${chalk.green('Connected correctly to server - cancelReservation - user')}`);
 
+        await User.findOneAndUpdate({ username: reservedBy }, {
+          hasReserved: false,
+          reservedBookId: null
+        }, (err) => {
+          if (err) {
+            debug(err);
+          }
+        });
+      } catch (err) {
+        debug(err.stack);
+      }
+      mongoose.disconnect();
+    }());
     (async function updateBook() {
       try {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
@@ -191,36 +207,13 @@ function adminController(nav) {
           isReserved: false,
           reservedBy: null
         }, (err, book) => {
-          debug('1');
           if (err) {
             debug(err);
           }
-          debug(book);
-          debug('1');
-        });
-      } catch (err) {
-        debug(err.stack);
-      }
-      mongoose.disconnect();
-    }());
-    (async function updateUser() {
-      try {
-        await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
-        debug(`${chalk.green('Connected correctly to server - cancelReservation - user')}`);
-
-        await User.findOneAndUpdate({ username: reservedBy }, {
-          hasReserved: false,
-          reservedBookId: null
-        }, (err, user) => {
-          if (err) {
-            debug(err);
+          if (book) {
+            debug('reservation canceled');
+            res.status(200).send({ result: 'canceled' });
           }
-          debug('2');
-
-          debug(user);
-          debug('2');
-
-          res.redirect('/admin'); // dont work with mongoose - use reload on client page -- need to change it!
         });
       } catch (err) {
         debug(err.stack);
