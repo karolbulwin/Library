@@ -54,7 +54,7 @@ function authController(nav) {
           console.log('2');
 
           debug(user);
-          debug('User created!');
+          // debug('User created!');
           req.logIn(user, () => {
             res.redirect('/books');
             console.log('3');
