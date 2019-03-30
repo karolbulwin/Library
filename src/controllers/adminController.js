@@ -283,6 +283,65 @@ function adminController(nav) {
       mongoose.disconnect();
     }());
   }
+  function editBook(req, res) {
+    const url = 'mongodb://localhost:27017/libraryApp';
+    const {
+      _id,
+      title,
+      author,
+      genre
+    } = req.body;
+
+    (async function mongo() {
+      try {
+        await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
+        debug(`${chalk.green('Connected correctly to server - edit book')}`);
+
+        await Book.findOneAndUpdate({ _id }, {
+          title,
+          author,
+          genre
+        }, (err, book) => {
+          if (err) {
+            debug(err);
+          }
+          if (book) {
+            debug('book changed');
+            res.status(200).send({ result: 'changed' });
+          }
+        });
+      } catch (err) {
+        debug(err.stack);
+      }
+      mongoose.disconnect();
+    }());
+  }
+  function deleteBook(req, res) {
+    const url = 'mongodb://localhost:27017/libraryApp';
+    const {
+      _id
+    } = req.body;
+
+    (async function mongo() {
+      try {
+        await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
+        debug(`${chalk.green('Connected correctly to server - delete book')}`);
+
+        await Book.findOneAndDelete({ _id }, (err, book) => {
+          if (err) {
+            debug(err);
+          }
+          if (book) {
+            debug('book deleted');
+            res.status(200).send({ result: 'deleted' });
+          }
+        });
+      } catch (err) {
+        debug(err.stack);
+      }
+      mongoose.disconnect();
+    }());
+  }
   function addBooks(req, res) {
     const url = 'mongodb://localhost:27017/libraryApp';
     (async function mongo() {
@@ -336,65 +395,6 @@ function adminController(nav) {
       setTimeout(() => { // server instance pool was destroy ?? save?
         mongoose.disconnect();
       }, 1000);
-    }());
-  }
-  function editBook(req, res) {
-    const url = 'mongodb://localhost:27017/libraryApp';
-    const {
-      _id,
-      title,
-      author,
-      genre
-    } = req.body;
-    
-    (async function mongo() {
-      try {
-        await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
-        debug(`${chalk.green('Connected correctly to server - edit book')}`);
-
-        await Book.findOneAndUpdate({ _id }, {
-          title,
-          author,
-          genre
-        }, (err, book) => {
-          if (err) {
-            debug(err);
-          }
-          if (book) {
-            debug('book changed');
-            res.status(200).send({ result: 'changed' });
-          }
-        });
-      } catch (err) {
-        debug(err.stack);
-      }
-      mongoose.disconnect();
-    }());
-  }
-  function deleteBook(req, res) {
-    const url = 'mongodb://localhost:27017/libraryApp';
-    const {
-      _id
-    } = req.body;
-
-    (async function mongo() {
-      try {
-        await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
-        debug(`${chalk.green('Connected correctly to server - delete book')}`);
-
-        await Book.findOneAndDelete({ _id }, (err, book) => {
-          if (err) {
-            debug(err);
-          }
-          if (book) {
-            debug('book deleted');
-            res.status(200).send({ result: 'deleted' });
-          }
-        });
-      } catch (err) {
-        debug(err.stack);
-      }
-      mongoose.disconnect();
     }());
   }
   return {
