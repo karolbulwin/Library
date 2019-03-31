@@ -46,7 +46,7 @@
   
     <main>
       <div class="container-fluid py-5 col-sm-8 col-md-7 col-lg-6 col-xl-5">
-        <form class="needs-validation" novalidate name="singUpForm" action="/auth/signUp" method="post">
+        <form class="needs-validation" novalidate name="signUpForm" action="/auth/signUp" method="post">
           <div class="form-row">
             <div class="col-md-6 mb-3">
               <label for="firstName">First name</label>
@@ -79,8 +79,8 @@
             <div class="valid-feedback">
               Looks good!
             </div>
-            <div class="invalid-feedback">
-            Alphanumeric 2-21 characters. Whitespace not allowed! Available special characters _ 
+            <div id="feedback" class="invalid-feedback">
+              Alphanumeric 2-21 characters. Whitespace not allowed! Available special characters _ 
           </div>
         </div>
         <div class="form-group">
@@ -98,7 +98,7 @@
           <div class="form-row">
             <div class="col-md-8 mb-3">
               <label for="city">City</label>
-              <input type="text" class="form-control" name="address" id="city" placeholder="London"
+              <input type="text" class="form-control" name="city" id="city" placeholder="London"
               pattern="^[A-Za-z0-9 ]{1,19}$" required>
               <div class="invalid-feedback">
                 Please provide a valid city.
@@ -106,7 +106,7 @@
             </div>
             <div class="col-md-4 mb-3">
               <label for="postalCode">Postal Code</label>
-              <input type="text" class="form-control" name="address" id="postalCode" placeholder="WC2N 5DU"
+              <input type="text" class="form-control" name="postal" id="postalCode" placeholder="WC2N 5DU"
               pattern="[A-Za-z]{1,2}[0-9Rr][0-9A-Za-z]? [0-9][ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}" required>
               <div class="invalid-feedback">
                 Please provide a valid Postal Code for UK.
@@ -126,6 +126,7 @@
   <script src="../../js/jquery.min.js"></script>
   <script src="../../js/bootstrap.min.js"></script>
   <script src="../../js/custom-validation.js"></script>
+  <script src="../../js/sign-up.js"></script>
 </body>
 
 </html>
