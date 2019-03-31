@@ -18,7 +18,8 @@ function authController(nav) {
       lastName,
       username,
       password,
-      address
+      city,
+      postal
     } = req.body;
     console.log('1');
 
@@ -33,39 +34,35 @@ function authController(nav) {
           username,
           password,
           address: {
-            city: address[0],
-            postal: address[1]
+            city,
+            postal
           },
           hasRented: false,
           hasReserved: false
         });
-        /*
-        const checkName = await col.findOne({ username: user.username });
 
-        if (checkName) {
-          res.status(500).send('Change your username! It is occupied!').end(); // TODO
-        } else {
-          const results = await col.insertOne(user);
-*/
         await newUser.save((err, user) => {
           if (err) {
             debug(err);
+            if (err.name === 'MongoError' && err.code === 11000) {
+              res.status(409).send({ msg: 'dup key' });
+            }
           }
           console.log('2');
-
-          debug(user);
-          // debug('User created!');
-          req.logIn(user, () => {
-            res.redirect('/books');
-            console.log('3');
-          });
+          if (user) {
+            debug('User created!');
+            req.logIn(user, () => {
+              res.status(200).send({ msg: 'created', url: '/books' });
+              console.log('3');
+            });
+          }
         });
       } catch (err) {
         console.log('4');
         debug(err);
       }
       console.log('5');
-      setTimeout(() => {
+      setTimeout(() => { // dont wait for save?
         console.log('6');
         mongoose.disconnect();
       }, 1000);
