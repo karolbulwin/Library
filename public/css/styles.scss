@@ -33,3 +33,12 @@ p.multiple-columns  {
   background-color: transparent;
   border-color: $btn-main;
 }
+
+form[name=singInForm]{
+  a{
+    color: $btn-main;
+    &:hover {
+      color:darken($color: $btn-main, $amount: 7%);
+    }
+  }
+}
