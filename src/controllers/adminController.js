@@ -118,21 +118,21 @@ function adminController(nav) {
   }
   function giveTheBookToTheUser(req, res) {
     const url = 'mongodb://localhost:27017/libraryApp';
-    const {
-      _id,
-      reservedBy
-    } = req.body;
+    const book = {
+      _id: req.body._id,
+      reservedBy: req.body.reservedBy
+    };
 
     (async function updateUser() {
       try {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
         debug(`${chalk.green('Connected correctly to server - giveTheBookToTheUser - user')}`);
 
-        await User.findOneAndUpdate({ username: reservedBy }, {
+        await User.findOneAndUpdate({ username: book.reservedBy }, {
           hasRented: true,
           hasReserved: false,
           reservedBookId: null,
-          rentedBookId: new ObjectID(_id)
+          rentedBookId: new ObjectID(book._id)
         }, (err) => {
           if (err) {
             debug(err);
@@ -148,18 +148,18 @@ function adminController(nav) {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
         debug(`${chalk.green('Connected correctly to server - giveTheBookToTheUser - book')}`);
 
-        await Book.findOneAndUpdate({ _id }, {
+        await Book.findOneAndUpdate({ _id: book._id }, {
           isRented: true,
           isReserved: false,
-          rentedBy: reservedBy,
+          rentedBy: book.reservedBy,
           reservedBy: null
-        }, (err, book) => {
+        }, (err, b) => {
           if (err) {
             debug(err);
           }
-          if (book) {
+          if (b) {
             debug('book given');
-            res.status(200).send({ result: 'given', bookId: _id, rentedBy: book.reservedBy });
+            res.status(200).send({ result: 'given', bookId: book._id, rentedBy: book.reservedBy });
           }
         });
       } catch (err) {
