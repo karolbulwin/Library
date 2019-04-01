@@ -218,20 +218,17 @@ function adminController(nav) {
   }
   function takeTheBookFromTheUser(req, res) {
     const url = 'mongodb://localhost:27017/libraryApp';
-    const {
-      _id
-    } = req.body;
-
-    const {
-      username
-    } = req.user;
+    const book = {
+      _id: req.body._id,
+      rentedBy: req.body.rentedBy
+    };
 
     (async function updateUser() {
       try {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
         debug(`${chalk.green('Connected correctly to server - takeBookFromTheUser - user')}`);
 
-        await User.findOneAndUpdate({ username }, {
+        await User.findOneAndUpdate({ username: book.rentedBy }, {
           hasRented: false,
           rentedBookId: null
         }, (err) => {
@@ -249,16 +246,15 @@ function adminController(nav) {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
         debug(`${chalk.green('Connected correctly to server - takeBookFromTheUser - book')}`);
 
-        await Book.findOneAndUpdate({ _id }, {
+        await Book.findOneAndUpdate({ _id: book._id }, {
           isRented: false,
           rentedBy: null
-        }, (err, book) => {
+        }, (err, b) => {
           if (err) {
             debug(err);
           }
-          if (book) {
-            debug('book taken');
-            res.status(200).send({ result: 'taken', bookId: _id });
+          if (b) {
+            res.status(200).send({ result: 'taken', bookId: book._id });
           }
         });
       } catch (err) {
