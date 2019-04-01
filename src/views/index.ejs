@@ -46,16 +46,20 @@
   
     <main>
       <div class="container-fluid py-5 col-sm-8 col-md-7 col-lg-6 col-xl-5">
-        <form class="needs-validation" novalidate  name="singInForm" action="/auth/signIn" method="post">
+        <form class="needs-validation" novalidate  name="signInForm" action="/auth/signIn" method="post">
           <div class="form-group">
             <label for="username">Username</label>
             <input type="text" class="form-control" name="username" id="username" placeholder="Your name..."
             pattern="^[A-Za-z0-9_]{2,21}$" required>
+            <div id="invalid-user" class="invalid-feedback">
+            </div>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
             <input type="password" class="form-control" name="password" id="password" placeholder="Password"
             pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" required>
+            <div id="invalid-password" class="invalid-feedback">
+            </div>
           </div>
           <div class="d-flex justify-content-between align-items-baseline">
             <button type="submit" class="btn btn-outline-success">Sign In</button>
@@ -75,6 +79,7 @@
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/custom-validation.js"></script>
+  <script src="js/sign-in.js"></script>
 </body>
 
 </html>
