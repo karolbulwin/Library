@@ -1,5 +1,20 @@
 @import 'colors.scss';
 
+body {
+  font-family: 'Open Sans', sans-serif;
+  &.using-mouse :focus:not(:disabled) { 
+      outline: none;
+      -webkit-box-shadow: none;
+              box-shadow: none;
+  }
+  :focus:not(:disabled) {
+    outline: none;
+    -webkit-box-shadow: 0 0 0 .2rem $focus;
+            box-shadow: 0 0 0 .2rem $focus;
+  }
+}
+
+
 p.multiple-columns  {
   -webkit-column-count: 3;
           column-count: 3;
