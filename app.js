@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const compression = require('compression');
 const sassMiddleware = require('node-sass-middleware');
+const passport = require('passport');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -82,6 +83,21 @@ app.get('/', (req, res) => {
       }
     );
   }
+});
+
+app.post('/auth/signIn', (req, res) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      res.status(404).send(err);
+    }
+    if (user) {
+      req.logIn(user, () => {
+        res.status(200).send({ message: 'logedIn', url: '/books' });
+      });
+    } else {
+      res.status(401).send(info);
+    }
+  })(req, res);
 });
 
 app.listen(port, () => {
