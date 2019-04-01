@@ -170,17 +170,17 @@ function adminController(nav) {
   }
   function cancelReservation(req, res) {
     const url = 'mongodb://localhost:27017/libraryApp';
-    const {
-      _id,
-      reservedBy
-    } = req.body;
+    const book = {
+      _id: req.body._id,
+      reservedBy: req.body.reservedBy
+    };
 
     (async function updateUser() {
       try {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
         debug(`${chalk.green('Connected correctly to server - cancelReservation - user')}`);
 
-        await User.findOneAndUpdate({ username: reservedBy }, {
+        await User.findOneAndUpdate({ username: book.reservedBy }, {
           hasReserved: false,
           reservedBookId: null
         }, (err) => {
@@ -198,15 +198,14 @@ function adminController(nav) {
         await mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
         debug(`${chalk.green('Connected correctly to server - cancelReservation - book')}`);
 
-        await Book.findOneAndUpdate({ _id }, {
+        await Book.findOneAndUpdate({ _id: book._id }, {
           isReserved: false,
           reservedBy: null
-        }, (err, book) => {
+        }, (err, b) => {
           if (err) {
             debug(err);
           }
-          if (book) {
-            debug('reservation canceled');
+          if (b) {
             res.status(200).send({ result: 'canceled' });
           }
         });
