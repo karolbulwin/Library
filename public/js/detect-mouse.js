@@ -1,4 +1,5 @@
 (function detectMouse() {
+  document.body.classList.add('using-mouse');
   document.body.addEventListener('mousedown', () => {
     document.body.classList.add('using-mouse');
   });
