@@ -58,39 +58,37 @@ function bookController(bookService, nav) {
         const db = client.db(dbName);
         const col = await db.collection('books');
 
-        await col.updateOne(
-          { _id: new ObjectID(book._id) },
-          {
-            $set: {
-              isReserved: true,
-              reservedBy: username
+        debug('Connected correctly to server - check if the book is reserved');
+        const bookToCheck = await col.findOne({ _id: new ObjectID(book._id) });
+        if (!bookToCheck.isReserved) {
+          await col.updateOne(
+            { _id: new ObjectID(book._id) },
+            {
+              $set: {
+                isReserved: true,
+                reservedBy: username
+              }
             }
+          );
+          try {
+            debug('Connected correctly to server - reserve book - user');
+            const colUsers = await db.collection('users');
+            await colUsers.updateOne(
+              { username },
+              { $set: { hasReserved: true, reservedBookId: new ObjectID(book._id) } }
+            );
+
+            req.session.passport.user.hasReserved = true;
+            req.session.passport.user.reservedBookId = new ObjectID(book._id);
+            req.session.save();
+
+            res.status(200).send({ result: 'redirect', url: '/books/myBooks' });
+          } catch (err) {
+            debug(err.stack);
           }
-        );
-      } catch (err) {
-        debug(err.stack);
-      }
-      client.close();
-    }());
-    (async function mongo() {
-      let client;
-      try {
-        client = await MongoClient.connect(url, { useNewUrlParser: true });
-        debug('Connected correctly to server - reserve book - user');
-
-        const db = client.db(dbName);
-        const col = await db.collection('users');
-
-        await col.updateOne(
-          { username },
-          { $set: { hasReserved: true, reservedBookId: new ObjectID(book._id) } }
-        );
-
-        req.session.passport.user.hasReserved = true;
-        req.session.passport.user.reservedBookId = new ObjectID(book._id);
-        req.session.save();
-
-        res.status(200).send({ result: 'redirect', url: '/books/myBooks' });
+        } else {
+          res.status(404).send({ result: 'too late' });
+        }
       } catch (err) {
         debug(err.stack);
       }
