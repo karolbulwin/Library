@@ -105,7 +105,13 @@
     
     xhr.onload = () => {
       const res = JSON.parse(xhr.response);
-      window.location.replace(res.url);
+      if (res.result === 'redirect') {
+        window.location.replace(res.url);
+      } else {
+        document.querySelector('#avaliable-for-user').innerText = 'can\'t';
+        document.querySelector("#btn-reserve").disabled = true;
+        document.querySelector('#avaliable-for-user').parentElement.innerText += ' Someone has reserved it in front of you!';
+      }
     }
     
     xhr.open('POST', '/books/reserveBook', true);
