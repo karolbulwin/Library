@@ -9,10 +9,12 @@ const session = require('express-session');
 const compression = require('compression');
 const sassMiddleware = require('node-sass-middleware');
 const passport = require('passport');
+const helmet = require('helmet');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(helmet());
 app.use(compression());
 app.use(morgan('dev'));
 app.use(sassMiddleware({
