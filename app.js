@@ -11,6 +11,8 @@ const sassMiddleware = require('node-sass-middleware');
 const passport = require('passport');
 const helmet = require('helmet');
 
+const expiryDate = new Date(Date.now() + 60 * 15 * 1000);
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -31,8 +33,13 @@ app.use(cookieParser());
 app.use(session(
   {
     secret: 'library',
+    name: 'lIbApP',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+      expires: expiryDate,
+      sameSite: true
+    }
   }
 ));
 
