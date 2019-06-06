@@ -2,13 +2,14 @@ const axios = require('axios');
 const xml2js = require('xml2js');
 const debug = require('debug')('app:goodreadsService');
 const chalk = require('chalk');
+const key = require('../../.env');
 
 const parser = xml2js.Parser({ explicitArray: false });
 
 function goodreadsService() {
   function getBookById(author, title) {
     return new Promise((resolve, reject) => {
-      const yourKey = ''; // get it form Goodreads
+      const yourKey = key; // get it form Goodreads
       const authorToArray = author.split(' ');
       const authorLast = authorToArray[authorToArray.length - 1];
       const newTitle = title.replace(/ /g, '+');
