@@ -99,6 +99,11 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+#files
+.env
+notes.txt
+test.js
+
 ### Sass ###
 .sass-cache/
 #*.css.map
