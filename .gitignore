@@ -103,6 +103,7 @@ typings/
 .env
 notes.txt
 test.js
+book-management.js
 
 ### Sass ###
 .sass-cache/
