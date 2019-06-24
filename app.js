@@ -14,7 +14,7 @@ const helmet = require('helmet');
 const expiryDate = new Date(Date.now() + 60 * 15 * 1000);
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.use(helmet());
 app.use(compression());
